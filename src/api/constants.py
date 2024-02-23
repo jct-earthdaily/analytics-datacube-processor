@@ -1,3 +1,5 @@
+""" constants use in the api"""
+
 from enum import Enum
 
 

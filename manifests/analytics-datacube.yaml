@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: analytics-datacube
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: analytics-datacube
+  template:
+    metadata:
+      labels:
+        app: analytics-datacube
+    spec:
+      containers:
+      - image: regdock01.azurecr.io/analytics_datacube_processor:v1.0.1
+        name: analytics-datacube-processor
+        env: 
+        - name: RUN_MODE_ENV
+          value: "API"  
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            cpu: '1'
+            memory: 1000Mi
+          requests:
+            cpu: 5m
+            memory: 100Mi
+      imagePullSecrets:
+        - name: acr-secrets
