@@ -109,47 +109,6 @@ async def create_analytics_datacube(
     return upload_to_cloud_storage(cloud_storage_provider, zarr_path, aws_s3_bucket)
 
 
-def upload_to_aws_s3(zarr_path: str, aws_s3_bucket: str):
-    """
-    Uploads data to AWS S3.
-
-    Args:
-        zarr_path (str): The path to the data to be uploaded.
-        aws_s3_bucket (str): The AWS S3 bucket name.
-
-    Returns:
-        dict or None: A dictionary containing the storage link if the upload is successful,
-                      otherwise None.
-
-    Notes:
-        This function uploads data to AWS S3 and returns a dictionary containing the storage link.
-        If the upload fails, it returns None.
-    """
-    if aws_s3.write_folder_to_aws_s3(zarr_path, aws_s3_bucket):
-        logger_manager.info("Analytics DataCube uploaded to AWS S3")
-        return {"storage_link": get_s3_uri_path(zarr_path, aws_s3_bucket)}
-
-
-def upload_to_azure_blob_storage(zarr_path: str):
-    """
-    Uploads data to Azure Blob Storage.
-
-    Args:
-        zarr_path (str): The path to the data to be uploaded.
-
-    Returns:
-        dict or None: A dictionary containing the storage link if the upload is successful,
-                      otherwise None.
-
-    Notes:
-        This function uploads data to Azure Blob Storage and returns a dictionary containing the storage link.
-        If the upload fails, it returns None.
-    """
-    if azure_blob_storage.upload_directory_to_azure_blob_storage(zarr_path):
-        logger_manager.info("Analytics DataCube uploaded to Azure Blob Storage")
-        return {"storage_link": azure_blob_storage.get_azure_blob_url_path(zarr_path)}
-
-
 def upload_to_cloud_storage(
     cloud_storage_provider: CloudStorageProvider,
     zarr_path: str,
@@ -173,6 +132,8 @@ def upload_to_cloud_storage(
     """
     try:
         if cloud_storage_provider == CloudStorageProvider.AWS:
+            if aws_s3_bucket is None:
+                aws_s3_bucket = os.getenv("AWS_BUCKET_NAME")
             if aws_s3.write_folder_to_aws_s3(zarr_path, aws_s3_bucket):
                 logger_manager.info("Analytics DataCube uploaded to AWS S3")
                 return {"storage_link": get_s3_uri_path(zarr_path, aws_s3_bucket)}
