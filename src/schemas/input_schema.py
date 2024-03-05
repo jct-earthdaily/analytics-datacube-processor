@@ -1,5 +1,6 @@
 """Input schema class"""
 from typing import List
+
 from pydantic import BaseModel
 
 

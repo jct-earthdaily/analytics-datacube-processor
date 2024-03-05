@@ -7,6 +7,7 @@ class Indicator(Enum):
     """
     Available Index values
     """
+
     NDVI = "NDVI"
     EVI = "EVI"
     GNDVI = "GNDVI"
@@ -16,9 +17,14 @@ class Indicator(Enum):
     LAI = "LAI"
 
 
-class CloudStorageProvider(Enum):
+class Question(Enum):
     """
-    Available Cloud Storage provider
+    An enumeration representing a question with possible answers.
+
+    Attributes:
+        no (str): The answer "No".
+        yes (str): The answer "Yes".
     """
-    AWS = "AWS_S3"
-    AZURE = "AZURE_BLOB_STORAGE"
+
+    NO = "No"
+    YES = "Yes"

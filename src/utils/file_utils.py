@@ -2,9 +2,12 @@
 
 """Utility functions for file operations."""
 import json
+
 from pydantic import ValidationError
+
 from schemas.input_schema import InputModel
 from schemas.output_schema import OutputModel
+
 
 def validate_data(data, data_type):
     """

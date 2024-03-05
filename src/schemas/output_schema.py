@@ -1,19 +1,33 @@
 """outpout schema class"""
+
 from typing import Optional
-from pydantic import BaseModel, HttpUrl
+
+from pydantic import BaseModel
 
 
+class Metrics(BaseModel):
+    """
+    Metrics for the output.
 
-class Metadata(BaseModel):
-    processId: str
-    processName: str
-    outputFormat: str
+    Attributes:
+        execution_time (Optional[str]): The execution time.
+        data_generation_network_use (Optional[str]): Network use for datacube generation.
+        data_upload_network_use (Optional[str]): Network use for datacube upload.
+    """
 
-class ProcessOutput(BaseModel):
-    status: str
-    outputPath: Optional[HttpUrl]
-    error: Optional[str]
+    execution_time: Optional[str] = None
+    data_generation_network_use: Optional[str] = None
+    data_upload_network_use: Optional[str] = None
+
 
 class OutputModel(BaseModel):
-    Metadata: Metadata
-    ProcessOutput: ProcessOutput
+    """
+    Output model containing storage links, and metrics.
+
+    Attributes:
+        StorageLinks (str): The link of the output path.
+        Metrics (Optional[Metrics]): Metrics for the output.
+    """
+
+    storage_links: str
+    metrics: Optional[Metrics] = None  # type: ignore

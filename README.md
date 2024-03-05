@@ -221,6 +221,10 @@ To set up and run the project using Docker, follow these steps:
 <br> --input_path: Path to the input data file
 <br> --bearer_token: Geosys Api bearer token value
 <br> --aws_s3_bucket_name: AWS S3 Bucket name 
+<br> --cloud_storage_provider: Cloud storage provider to store the zarr file (AWS/AZURE)
+<br> --entity_id: Provide an entity_id value added to the zarr output file
+<br> --metrics: Display bandwitdh & time metrics in results (bool)
+
 <br><br>
 For example:
     ```
