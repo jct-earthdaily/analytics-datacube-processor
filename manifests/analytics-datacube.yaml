@@ -14,7 +14,7 @@ spec:
         app: analytics-datacube
     spec:
       containers:
-      - image: regdock01.azurecr.io/analytics_datacube_processor:v1.0.1
+      - image: regdock01.azurecr.io/analytics_datacube_processor:v1.0.2
         name: analytics-datacube-processor
         env: 
         - name: RUN_MODE_ENV
