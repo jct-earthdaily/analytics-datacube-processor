@@ -1,3 +1,5 @@
+name: Deploy Python application as a Lambda
+
 on:
   workflow_dispatch:
     inputs:
