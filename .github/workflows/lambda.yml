@@ -1,0 +1,19 @@
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+jobs:
+  get-filenames:
+    runs-on: ubuntu-latest
+    outputs:
+      lambdaArray: ${{ steps.getLambdas.outputs.lambdas }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Get functions filenames
+        id: getLambdas
+        run: |
+          lambdas=$(tree -d -L 1 -J . | jq -j -c '.[0].contents | map(.name)')
+          echo ::set-output name=lambdas::${lambdas}
