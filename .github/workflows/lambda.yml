@@ -1,9 +1,15 @@
 on:
-  workflow_call:
+  workflow_dispatch:
     inputs:
-      environment:
+      logLevel:
+        description: 'Log level'
         required: true
-        type: string
+        default: 'warning'
+        type: choice
+        options:
+        - info
+        - warning
+        - debug
 jobs:
   get-filenames:
     runs-on: ubuntu-latest
