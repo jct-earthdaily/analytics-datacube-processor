@@ -3,25 +3,62 @@ name: Deploy Python application as a Lambda
 on:
   workflow_dispatch:
     inputs:
-      logLevel:
-        description: 'Log level'
+      AWS_REGION:
+        description: 'Your AWS region'
         required: true
-        default: 'warning'
-        type: choice
-        options:
-        - info
-        - warning
-        - debug
+        default: 'us-east-1'
+      AWS_ACCESS_KEY_ID:
+        description: 'Your AWS Access Key Id'
+        required: true
+        default: 'abcdefg'
+      AWS_SECRET_ACCESS_KEY:
+        description: 'Your AWS Secret Access Key'
+        required: true
+        default: 'abcdefg'
+      ECR_REPOSITORY:
+        description: 'Your AWS ECR Repository name'
+        required: true
+        default: 'EarthdailyProcessors'
+
+
+permissions:
+  contents: read
+
 jobs:
-  get-filenames:
+  deploy:
+    name: Deploy
     runs-on: ubuntu-latest
-    outputs:
-      lambdaArray: ${{ steps.getLambdas.outputs.lambdas }}
+    environment: production
+
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-      - name: Get functions filenames
-        id: getLambdas
-        run: |
-          lambdas=$(tree -d -L 1 -J . | jq -j -c '.[0].contents | map(.name)')
-          echo ::set-output name=lambdas::${lambdas}
+    - name: Checkout
+      uses: actions/checkout@v3
+      
+    - name: Get version
+      run: |
+        VER=$(cat VERSION)
+        echo "VERSION=$VER" >> $GITHUB_ENV
+        
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ github.event.inputs.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ github.event.inputs.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ github.event.inputs.AWS_REGION }}
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
+    - name: Build, tag, and push image to Amazon ECR
+      id: build-image
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        IMAGE_TAG: ${{ env.VERSION }}
+      run: |
+        # Build a docker container and
+        # push it to ECR so that it can
+        # be deployed to ECS.
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
