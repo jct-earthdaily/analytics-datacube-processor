@@ -1,4 +1,4 @@
-name: Deploy Python application as a Lambda
+honame: Deploy Python application as a Lambda
 
 on:
   workflow_dispatch:
@@ -28,7 +28,7 @@ jobs:
         VER=$(cat VERSION)
         # echo "VERSION=$VER" >> $GITHUB_ENV # send to env variable
         echo "version=$VER" >> $GITHUB_OUTPUT # send to step output
-        
+        echo $VER
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
