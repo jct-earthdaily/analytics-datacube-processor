@@ -1,4 +1,4 @@
-honame: Deploy Python application as a Lambda
+name: Deploy Python application as a Lambda
 
 on:
   workflow_dispatch:
