@@ -7,6 +7,12 @@ on:
         type: environment
         description: 'Your environnement'
         required: true
+      name:
+        type: choice
+        description: Who to greet
+        options: 
+        - monalisa
+        - cschleiden
 
 
 permissions:
@@ -29,6 +35,7 @@ jobs:
         # echo "VERSION=$VER" >> $GITHUB_ENV # send to env variable
         echo "version=$VER" >> $GITHUB_OUTPUT # send to step output
         echo $VER
+        echo "${{ github.event.inputs.name }}"
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
